@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llm-tag-sanitizer"
+version = "0.1.0"
+description = "Optimize music file tags using Ollama LLM"
+requires-python = ">=3.10"
+dependencies = [
+    "mutagen>=1.47",
+    "ollama>=0.4",
+    "duckduckgo-search>=6.0",
+    "click>=8.1",
+    "rich>=13.0",
+    "pydantic>=2.0",
+]
+
+[project.scripts]
+llm-tag-sanitizer = "llm_tag_sanitizer.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/llm_tag_sanitizer"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
