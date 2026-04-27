@@ -100,6 +100,7 @@ llm-tag-sanitizer /path/to/music --apply -y
 | オプション | デフォルト | 説明 |
 |---|---|---|
 | `--model TEXT` | `llama3.1` | 使用する Ollama モデル名 |
+| `--host TEXT` | `http://localhost:11434` | Ollama サーバーの URL (環境変数 `OLLAMA_HOST` でも設定可) |
 | `--dry-run` / `--apply` | `--dry-run` | 変更のプレビューのみ / 実際に適用 |
 | `--web-search` | off | Web 検索でアーティスト情報を取得 |
 | `--rename` | off | タグ変更後にファイル名・ディレクトリも変更 |
@@ -184,6 +185,17 @@ llm-tag-sanitizer /path/to/music --model gemma2:9b
 
 # qwen2.5 を使用
 llm-tag-sanitizer /path/to/music --model qwen2.5:14b
+```
+
+### リモートの Ollama サーバーに接続
+
+```bash
+# --host で指定
+llm-tag-sanitizer /path/to/music --host http://192.168.1.100:11434
+
+# 環境変数でも設定可能
+export OLLAMA_HOST=http://192.168.1.100:11434
+llm-tag-sanitizer /path/to/music
 ```
 
 使用可能なモデルは `ollama list` で確認できる。

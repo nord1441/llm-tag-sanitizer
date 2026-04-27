@@ -42,6 +42,12 @@ ALL_OPTIMIZERS = ["artist_normalizer", "disc_merger", "swap_detector"]
     help="Ollama model to use.",
 )
 @click.option(
+    "--host",
+    default=None,
+    envvar="OLLAMA_HOST",
+    help="Ollama server URL (default: http://localhost:11434, env: OLLAMA_HOST).",
+)
+@click.option(
     "--dry-run/--apply",
     default=True,
     show_default=True,
@@ -100,6 +106,7 @@ ALL_OPTIMIZERS = ["artist_normalizer", "disc_merger", "swap_detector"]
 def main(
     directory: Path,
     model: str,
+    host: str | None,
     dry_run: bool,
     web_search: bool,
     rename: bool,
@@ -125,8 +132,9 @@ def main(
             sys.exit(1)
 
     # Initialize Ollama client
+    llm_client = OllamaClient(model=model, host=host)
     console.print(f"[bold]Using model:[/bold] {model}")
-    llm_client = OllamaClient(model=model)
+    console.print(f"[bold]Ollama host:[/bold] {llm_client.host}")
 
     try:
         if not llm_client.check_model():

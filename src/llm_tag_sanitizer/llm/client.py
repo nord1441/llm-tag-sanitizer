@@ -3,16 +3,20 @@
 import json
 import logging
 
-import ollama as ollama_lib
+from ollama import Client
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_HOST = "http://localhost:11434"
 
 
 class OllamaClient:
     """Wrapper around the Ollama Python client."""
 
-    def __init__(self, model: str = "llama3.1"):
+    def __init__(self, model: str = "llama3.1", host: str | None = None):
         self.model = model
+        self.host = host or DEFAULT_HOST
+        self._client = Client(host=self.host)
 
     def query(
         self,
@@ -43,7 +47,7 @@ class OllamaClient:
             kwargs["format"] = "json"
 
         try:
-            response = ollama_lib.chat(**kwargs)
+            response = self._client.chat(**kwargs)
             content = response["message"]["content"]
             logger.debug("LLM response: %s", content[:200])
             return content
@@ -70,7 +74,7 @@ class OllamaClient:
     def list_models(self) -> list[str]:
         """List available Ollama models."""
         try:
-            response = ollama_lib.list()
+            response = self._client.list()
             return [m.model for m in response.models]
         except Exception as e:
             logger.error("Failed to list Ollama models: %s", e)
@@ -80,7 +84,6 @@ class OllamaClient:
         """Check if the configured model is available."""
         try:
             models = self.list_models()
-            # Check if model name matches (with or without :latest tag)
             for m in models:
                 if m == self.model or m.startswith(self.model + ":"):
                     return True
