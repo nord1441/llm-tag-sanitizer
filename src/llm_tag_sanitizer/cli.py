@@ -165,7 +165,7 @@ def main(
     console.print(f"Found {len(tracks)} music files.\n")
 
     # Step 2: Group tracks
-    artist_groups = group_by_artist(tracks)
+    artist_groups = group_by_artist(tracks, web_searcher=web_searcher)
     console.print(f"Grouped into {len(artist_groups)} artist group(s).\n")
 
     # Step 3: Run optimizers
